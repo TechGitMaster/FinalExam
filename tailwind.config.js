@@ -11,9 +11,8 @@ module.exports = {
       'white': '#fff'
     }
   },
-  corePlugins: {
-    aspectRatio: false,
-  },
-  plugins: [require('tailwind-scrollbar'),
-  require('@tailwindcss/aspect-ratio'),],
+
+  plugins: [
+    require('tailwind-scrollbar')
+  ]
 }

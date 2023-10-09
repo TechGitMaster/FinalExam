@@ -1,9 +1,11 @@
 <template>
 
+  
   <button 
     v-if="!showNav" 
     @click="orderNow"
     class="fixed bottom-[2%] right-[3%] bg-[#D20F1B] text-white rounded-[15px] py-4 z-10 text-[15px] w-[40%] shadow-lg">Order Now!</button>
+
 
 </template>
 

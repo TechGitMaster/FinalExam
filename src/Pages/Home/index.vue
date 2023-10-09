@@ -62,11 +62,11 @@
     <!--____Most Popular____-->
     <div class="px-3">
         <p class="text-[18px] font-semibold">Most Popular</p>
-        <div class="grid grid-cols-2">
+        <div class="grid grid-cols-2 gap-3">
             <div v-for="(data, index) in mP" class="overflow-hidden">
-                <div class="bg-[#E9ECEF] rounded-[17px] mx-1 mt-2 p-3">
-                    <div class="flex justify-center mb-5">
-                        <img :src="data.img" alt="img" class="h-[110px] p-2"/>
+                <div class="bg-[#E9ECEF] rounded-[17px] p-3">
+                    <div class="mb-5">
+                        <img :src="data.img" alt="img" class="w-full aspect-square object-contain"/>
                     </div>
                     <div class="px-2 pb-3">
                         <p class="text-[14px] font-semibold truncate">{{ data.name }}</p>

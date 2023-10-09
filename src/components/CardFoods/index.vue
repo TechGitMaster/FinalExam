@@ -1,7 +1,7 @@
 <template>
-  <div class="grid grid-cols-2">
+  <div class="grid grid-cols-2 gap-3 mt-3">
     <div v-for="(data, index) in filterList">
-      <div @click="selectedMeal" class="rounded-[17px] overflow-hidden bg-[#E9ECEF] mx-1 mt-3 cursor-pointer">
+      <div @click="selectedMeal" class="rounded-[17px] overflow-hidden bg-[#E9ECEF] cursor-pointer">
             <div class="mb-5 overflow-hidden">
                 <img :src="data.strMealThumb" alt="img" class="w-full h-[150px] object-cover"/>
             </div>
