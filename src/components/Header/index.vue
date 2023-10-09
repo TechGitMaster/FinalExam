@@ -3,7 +3,7 @@
     <div>
 
         <!--____Home Header____-->
-        <div v-if="linkUrl !== '/viewProductPage' && linkUrl !== '/orderSummaryPage'" 
+        <div v-if="linkUrl !== '/viewProductPage' && linkUrl !== '/orderSummaryPage' && linkUrl !== '/orderReceivedPage'" 
             class="flex items-center justify-between">
 
             <!--___Burger icon___-->
@@ -26,7 +26,7 @@
 
 
         <!--____Order Now, Loyalty Points, and others Header_____-->
-        <div v-else class="flex items-center justify-between">
+        <div v-else-if="linkUrl !== '/orderReceivedPage'" class="flex items-center justify-between">
 
             <div class="flex items-center">
                 <!--Arrow Back Icon-->

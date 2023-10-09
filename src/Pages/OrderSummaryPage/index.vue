@@ -54,8 +54,8 @@
 
                      <!--____Info foods_____-->
                     <div class="flex">
-                        <img :src="pngs[5]" alt="food" class="h-[60px] mr-3 rounded-[20px]" />
-                        <div class="">
+                        <img :src="pngs[5]" alt="food" class="mr-3 aspect-square h-[60px] rounded-[10px] object-cover" />
+                        <div>
                             <p class="font-semibold text-[15px] mb-2 truncate">Steak Fries Veggies</p>
                             <p>1x Tomato Sauce</p>
                             <p>1x Regular Coke</p>
