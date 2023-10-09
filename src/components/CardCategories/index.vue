@@ -10,7 +10,7 @@
   </div>
 
   <!--___Categories Home Page____-->
-  <div v-else-if="conditionCategories" v-for="(data, index) in categoriesList" class="min-w-[200px] h-[300px] overflow-hidden rounded-[17px] relative mr-2">
+  <div v-else-if="conditionCategories" v-for="(data, index) in categoriesList.slice(1, 5)" class="min-w-[200px] h-[300px] overflow-hidden rounded-[17px] relative mr-2">
     <img :src="pngs[0]" alt="img" class="w-full h-full object-cover" />
     <div class='absolute top-0 w-full h-full bg-[#00000080] p-4'>
         <div class='absolute bottom-[9%] text-white'>
