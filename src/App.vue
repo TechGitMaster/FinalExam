@@ -1,30 +1,59 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+    <!--<router-link to="/">Home</router-link>
+    <router-link :to="{ name: 'Index' }" >Index</router-link>
+    <router-view />-->
+      
+    
+  <div class="flex text-[14px]">
+    <div v-if="showNav && showHeaderComponent" class="w-[80%]">
+      <LeftSideNavigation />
+    </div>
+    
+    <div :class="`${showNav ? 'w-[20%]':'w-full'} overflow-hidden`">
+        <Main :showNavF="showNavF" :showNav="showNav" :showHeaderComponent="showHeaderComponent" :linkUrl="linkUrl" />
+    </div>
+
+  </div>
+
+
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+  import { watchEffect } from 'vue';
+  import LeftSideNavigation from './components/LeftSideNavigation/index.vue';
+  import Main from './Pages/main.vue';
 
-nav {
-  padding: 30px;
-}
+  export default {
+    components: {
+      Main,
+      LeftSideNavigation
+    },
+    created() {
+      watchEffect(() => {
+        this.showHeaderComponent = this.$route.path !== '/' && this.$route.path !== '/login';
+        this.linkUrl = this.$route.path;
 
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+        if(!this.showHeaderComponent) this.showNav = false;
+      });
+    },
+    mounted() {
+      this.eventBusMit.on('show-nav', (val) => {
+        this.showNav = val;
+      });
+    },  
+    data() {
+        return {
+          showNav: false,
+          linkUrl: '/',
+          showHeaderComponent: false,
+        }
+    },
+    methods: {
+      showNavF () {
+        this.showNav = !this.showNav;
+        this.eventBusMit.emit('show-nav', this.showNav);
+      }
+    }
+  }
 
-nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+</script>
