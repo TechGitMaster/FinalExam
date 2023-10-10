@@ -47,16 +47,16 @@
         <div class="my-6">
             <p class="font-semibold text-[20px] mb-2 px-3">Orders</p>
 
-            <div :class="`flex mx-3 mb-2 ${ orderClicked ? '':'items-center' }`">
+            <div v-for="(data, index) in listCartItem" :class="`flex mx-3 mb-2 ${ data[1] ? '':'items-center' }`">
                  <div 
-                    @click="orderClicked = !orderClicked"
+                    @click="data[1] = !data[1]"
                     :class="`rounded-[20px] mr-2 p-5 bg-[#E9ECEF] w-full`">
 
                      <!--____Info foods_____-->
                     <div class="flex">
-                        <img :src="pngs[5]" alt="food" class="mr-3 aspect-square h-[60px] rounded-[10px] object-cover" />
+                        <img :src="data[0].product.image" alt="food" class="mr-3 aspect-square h-[60px] rounded-[10px] object-cover" />
                         <div>
-                            <p class="font-semibold text-[15px] mb-2 truncate">Steak Fries Veggies</p>
+                            <p class="font-semibold text-[15px] mb-2 truncate">{{ data[0].product.name }}</p>
                             <p>1x Tomato Sauce</p>
                             <p>1x Regular Coke</p>
                             <p>1x Friend Chicken</p>
@@ -67,16 +67,16 @@
 
                     <!--____Price_____-->
                     <div class="flex justify-between">
-                        <p class="text-[20px] text-[#CC0F1B] font-semibold">P 185</p>
+                        <p class="text-[20px] text-[#CC0F1B] font-semibold">P {{ data[0].product.price }}</p>
 
                         <div class="flex items-center">
-                            <div class="p-3 rounded-lg bg-[#cbced1]" @click.stop="bttnPlusMinus > 1 ? bttnPlusMinus--:bttnPlusMinus = 1">
+                            <div class="p-3 rounded-lg bg-[#cbced1]" @click.stop="() => data[2] > 1 ? data[2]-=1:data[2] = 1">
                                 <img :src="pngs[4]" alt="ico" class="h-[10px]" />
                             </div>
                         
-                            <p class="mx-5 font-semibold text-[15px]">{{ bttnPlusMinus }}</p>
+                            <p class="mx-5 font-semibold text-[15px]">{{ data[2] }}</p>
                         
-                            <div class="p-3 rounded-lg bg-[#cbced1]" @click.stop="bttnPlusMinus++">
+                            <div class="p-3 rounded-lg bg-[#cbced1]" @click.stop="() => data[2]+=1">
                                 <img :src="pngs[3]" alt="ico" class="h-[10px]" />
                             </div>
                         </div>
@@ -85,7 +85,7 @@
                  </div>
              
                  <!--___Delete___-->
-                 <div v-if="orderClicked" class="min-h-full flex">                     
+                 <div @click="() => deleteItem(data[0].id)" v-if="data[1]" class="min-h-full flex">                     
                      <div class="bg-[#F5D7DA] p-3 w-[43px] flex justify-center items-center rounded-[15px]">
                          <img :src="pngs[1]" alt="ico" class="max-h-[23px]" />
                      </div>
@@ -93,7 +93,7 @@
              
              
                  <!--___3 Dots____-->
-                 <div v-if="!orderClicked" :class="`mx-1 flex items-center justify-center`">
+                 <div v-if="!data[1]" :class="`mx-1 flex items-center justify-center`">
                      <div>
                          <div class="p-[4px] bg-[#F9BE05] rounded-[50%]"></div>
                          <div class="p-[4px] bg-[#F9BE05] rounded-[50%] my-2"></div>
@@ -158,7 +158,7 @@
             </div>
 
             <button 
-                @click="() => $router.push('/orderReceivedPage')"
+                @click="() => $router.push('/order-received-page')"
                 class="w-[60%] bg-[#D20F1B] text-white rounded-[15px] py-4 z-10 shadow-lg font-semibold">Place Order</button>
         </div>
     </div>
@@ -167,9 +167,9 @@
 
 <script>
     import { Pen, Delete, Mp1, Plus, Minus, Paypal, Paynamics, SampleImg } from '../../utilities/png.js';
+    import { getCartProduct, deleteItemProduct } from '@/utilities/apiCall';
 
-    export default {
-
+    export default { 
         data(){
             return {
                 pngs: [ Pen, Delete, Mp1, Plus, Minus, SampleImg ],
@@ -195,6 +195,7 @@
                 ],
                 orderClicked: false,
                 bttnPlusMinus: 1,
+                listCartItem: [],
                 paymentOptions: [
                     {
                         titleI: 'Cash on Delivery',
@@ -219,11 +220,24 @@
                 ]
             }
         },
-
         created(){
+            this.getCart();
+
             setTimeout(() => {
                 window.scrollTo({ top: 0, behavior: 'smooth' })
             }, (100));
+        },
+        methods: {
+            async getCart() {
+              const data = await getCartProduct();
+              this.listCartItem = data.data.items.map(a => [a, false, a.quantity]);
+
+              if(this.listCartItem.length === 0) this.$router.push('/product-page')
+            }, 
+            async deleteItem(itemId) {
+                await deleteItemProduct(itemId);
+                this.getCart();
+            }
         }
     }
 

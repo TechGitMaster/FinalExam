@@ -10,7 +10,7 @@
     
         <div class="absolute left-0 bottom-5 px-3 w-full">
             <button
-                @click="() => $router.push('/commingSoonPage')"
+                @click="() => $router.push('/comming-soon-page')"
                 class="w-[100%] bg-[#D20F1B] text-white rounded-[15px] py-5 text-[15px] mb-4 shadow-lg font-semibold">Track Order</button>
             <p 
                 @click="() => $router.push('/home')"

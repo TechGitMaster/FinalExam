@@ -16,6 +16,8 @@
     "@capacitor/haptics": "5.0.6",
     "@capacitor/keyboard": "5.0.6",
     "@capacitor/status-bar": "5.0.6",
+    "@headlessui/vue": "^1.7.16",
+    "axios": "^1.5.1",
     "core-js": "^3.8.3",
     "mitt": "^3.0.1",
     "register-service-worker": "^1.7.2",

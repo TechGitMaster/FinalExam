@@ -1,57 +1,34 @@
 <template>
-    <!--<router-link to="/">Home</router-link>
-    <router-link :to="{ name: 'Index' }" >Index</router-link>
-    <router-view />-->
-      
-    
-  <div class="flex text-[14px]">
-    <div v-if="showNav && showHeaderComponent" class="w-[80%]">
-      <LeftSideNavigation />
-    </div>
-    
-    <div :class="`${showNav ? 'w-[20%]':'w-full'} overflow-hidden`">
-        <Main :showNavF="showNavF" :showNav="showNav" :showHeaderComponent="showHeaderComponent" :linkUrl="linkUrl" />
-    </div>
 
+  <!--______Loading Inverted_________-->
+  <div v-if="!doneLoading" class="h-[100vh] flex justify-center items-center bg-rose">
+    <div>
+      <img :src="pngs[0]" class="h-[197px]"/>
+    </div>
   </div>
 
+  <!--______Main Route______-->
+  <router-view v-else/>
 
 </template>
 
 <script>
-  import { watchEffect } from 'vue';
-  import LeftSideNavigation from './components/LeftSideNavigation/index.vue';
-  import Main from './Pages/main.vue';
+  import { Logo2 } from '@/utilities/png';
 
   export default {
-    components: {
-      Main,
-      LeftSideNavigation
-    },
     created() {
-      watchEffect(() => {
-        this.showHeaderComponent = this.$route.path !== '/' && this.$route.path !== '/login';
-        this.linkUrl = this.$route.path;
+      const token = localStorage.getItem('token');
 
-        if(!this.showHeaderComponent) this.showNav = false;
-      });
+      setTimeout(() => {
+        this.doneLoading = true;
+        this.$router.push(token === null || token === '' ? '/login' : 
+        this.$route.path === '/login' || this.$route.path === '/' ? '/home' : this.$route.path);
+      }, 2000); 
     },
-    mounted() {
-      this.eventBusMit.on('show-nav', (val) => {
-        this.showNav = val;
-      });
-    },  
     data() {
-        return {
-          showNav: false,
-          linkUrl: '/',
-          showHeaderComponent: false,
-        }
-    },
-    methods: {
-      showNavF () {
-        this.showNav = !this.showNav;
-        this.eventBusMit.emit('show-nav', this.showNav);
+      return {
+        pngs: [ Logo2 ],
+        doneLoading: false
       }
     }
   }

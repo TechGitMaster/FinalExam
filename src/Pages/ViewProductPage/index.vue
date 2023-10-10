@@ -3,26 +3,26 @@
     <div class="px-3 pb-[60px] relative">
         <div class="relative mb-3 pb-[20px]">
             <div class="w-full bg-[#DFE3E7] rounded-[20px] overflow-hidden">
-                <img :src="pngs[0]" alt="food" class='w-full h-[250px] object-cover' />
+                <img :src="selectedProduct.image" alt="food" class='w-full h-[250px] object-cover' />
             </div>
             <div @click="heartBtn = !heartBtn" class='absolute right-[4%] -bottom-[1%] p-4 rounded-[20px] bg-white shadow-lg z-20'>
-                <img :src="!heartBtn ? pngs[2]:pngs[3]" alt="ico" class="h-[23px]" />
+                <img :src="heartBtn ? pngs[3]: pngs[2]" alt="ico" class="h-[23px]" />
             </div>
         </div>
 
 
         <!--___Details foods___-->
         <div class="-mt-[1%] mb-5">
-            <p class="font-semibold text-[15px]">Steak Fries Veggies</p>
+            <p class="font-semibold text-[15px]">{{ selectedProduct.name }}</p>
             <img :src="pngs[1]" alt="ico" class="h-[30px] -ml-[14px] my-3" />
 
-            <p class="text-[#767E85] text-justify">Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nam eu aliquam ipsum, sed accumsan metus. Maecenas neque nunc, tincidunt nec dui ac, rutrum consectetur ligula.</p>
+            <p class="text-[#767E85] text-justify">{{ selectedProduct.description }}</p>
         </div>
 
 
         <!--___Price and Add Food___-->
         <div class="flex justify-between mb-5">
-            <p class="text-[22px] text-[#CC0F1B] font-semibold">P 172</p>
+            <p class="text-[22px] text-[#CC0F1B] font-semibold">P {{ selectedProduct.price }}</p>
 
             <div class="flex items-center">
                 <div class="p-3 rounded-lg bg-[#DFE3E7]" @click="addMinusF(0, false)">
@@ -101,7 +101,7 @@
 
             <!--___Add to Bag___-->
             <div class="fixed bottom-[2%] w-full left-0 px-3">
-                <button @click="openModal = true"
+                <button @click="addToCartF()"
                 class=" w-[100%] bg-[#D20F1B] text-white rounded-[15px] py-4 z-10 shadow-lg font-semibold">Add to Bag</button>
             </div>
 
@@ -119,18 +119,20 @@
 
 
 <script>
-    import { SampleImg, Star, Heart, HeartFilled, Plus, Minus, Mp5, Mp6 } from '../../utilities/png.js';
+    import { SampleImg, Star, Heart, HeartFilled, Plus, Minus, Mp5, Mp6 } from '@/utilities/png.js';
     import Modal from '../../components/Modal/index.vue';
+    import { getAllProduct, addToCart } from '@/utilities/apiCall.js';
+
 
     export default {
         components: {
             Modal
         },
-        
         data(){
             return {
                 pngs: [SampleImg, Star, Heart, HeartFilled, Plus, Minus],
                 selectedBeverage: 0,
+                selectedProduct: {},
                 openModal: false,
                 AddOns: [{
                     png: Mp5,
@@ -151,6 +153,19 @@
         },
 
         created(){
+            const getAllProducts = async () => {
+                const data = await getAllProduct();
+                const product = data.filter(a => `${a.id}` === this.$route.params.id);
+                if(product.length > 0){
+                    this.selectedProduct = product[0];
+                    this.eventBusMit.emit('product-selected', product[0].category_meta.description)
+                }else{
+                    this.$router.push('/product-page');
+                }
+            }     
+
+            getAllProducts();
+
             setTimeout(() => {
                 window.scrollTo({ top: 0, behavior: 'smooth' })
             }, (100));
@@ -160,13 +175,16 @@
           closeModal(){
             this.openModal = false;
           },
-
           addMinusF(count, con){
             if(!con){
                 this.bttnPlusMinus[count] > 1 ? this.bttnPlusMinus[count]--:this.bttnPlusMinus[count] = 1;
             }else{
                 this.bttnPlusMinus[count]++;
             }
+          },
+          async addToCartF() {
+            await addToCart(this.selectedProduct.id, this.bttnPlusMinus[0]);
+            this.openModal = true;
           }
         }
 

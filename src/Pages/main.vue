@@ -1,39 +1,65 @@
 <template>
-  <!--<router-link to="/">Home</router-link>
-  <router-link :to="{ name: 'Index' }" >Index</router-link>
-  <router-view />-->
+  <div class="flex">
 
-  <div :class="`${showNav ? 'min-w-[400px] h-[100vh]':''} 
-    ${ !showHeaderComponent ? 'pb-[0px]': linkUrl === '/home' ? 'pb-[90px]':'pb-[20px]'} relative`">
+    <Transition>
+      <div v-show="showNav" :class="`${showNav ? 'LeftNav': 'LeftNavClose'}`">
+        <LeftSideNavigation />
+      </div>
+    </Transition>
+    <div :class="`${showNav ? 'w-[20%]':'w-full'} overflow-hidden`" :style="showNav ? 'transition: 0.3s ease-in;': ''">
+      <div :class="`${showNav ? 'h-[100vh]':''}
+        ${ linkUrl === '/home' ? 'pb-[90px]':'pb-[20px]'} min-w-[400px] flex flex-col text-[14px] relative`" >
 
-    <div 
-        v-if="showNav" 
-        @click="showNavF()"
-        class="bg-[#0909096c] w-full h-[100vh] absolute top-0 left-0 z-10 "></div>
+        <div 
+          v-if="showNav" 
+          @click="showNavF()"
+          class="bg-[#0909096c] w-full h-[100vh] absolute top-0 left-0 z-10 "></div>
 
-    <!--___Header___-->
-    <div v-if="showHeaderComponent" class="mb-4 p-3">
-      <Header :showNavF="showNavF" :linkUrl="linkUrl" />
+        <!--___Header___-->
+        <div class="mb-4 p-3 w-full">
+          <Header :showNavF="showNavF" :linkUrl="linkUrl" />
+        </div>
+
+        <!--___Routes___-->
+        <router-view />
+      </div>
     </div>
-
-    <!--___Routes___-->
-    <router-view />
   </div>
 
 </template>
 
 <script>
-  import Header from '../components/Header/index.vue';    
+  import LeftSideNavigation from '../components/LeftSideNavigation/index.vue';
+  import Header from '../components/Header/index.vue';  
+  import { watchEffect } from 'vue';  
 
   export default {
-    props: [ 'showHeaderComponent', 'linkUrl', 'showNavF', 'showNav' ],
     components: {
       Header,
+      LeftSideNavigation
     },
-    data(){
-      return {
+    created() {
+      watchEffect(() => {
+        this.linkUrl = this.$route.path.replace(/\/\d+$/, '');
+      });
+    },
+    mounted() {
+      this.eventBusMit.on('show-nav', (val) => {
+        this.showNav = val;
+      });
+    },  
+    data() {
+        return {
+          showNav: false,
+          linkUrl: '/'
+        }
+    },
+    methods: {
+      showNavF () {
+        this.showNav = !this.showNav;
+        this.eventBusMit.emit('show-nav', this.showNav);
       }
-    },
+    }
   }
 
 </script>

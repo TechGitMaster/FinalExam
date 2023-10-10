@@ -1,6 +1,6 @@
 <template>
 
-    <div class="px-3">
+    <div class="px-3 pb-20">
         <div class="flex justify-between items-center mb-3">
             <div class="flex items-center">
                 <img :src="pngs[0]" alt="ico" class="h-[45px] mr-4" />

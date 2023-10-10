@@ -17,7 +17,11 @@
     <div class="px-3 my-6">
         <div class='p-4 rounded-[15px] bg-[#F8F9FA] flex items-center' style="border:1px solid #DBDEE2">
             <img :src="pngs[1]" alt="ico" class="h-[17px] mr-3" />
-            <input type="text" placeholder="try our new Steak Fries Veggies" class="w-full outline-none bg-[#F8F9FA]" />
+            <Input 
+                textInput="text" 
+                placeholder="try our new Steak Fries Veggie" 
+                condition="home-page"
+                class="w-full outline-none bg-[#F8F9FA]" />
         </div>
     </div>
 
@@ -48,7 +52,11 @@
     <div class="mb-5">
         <p class="px-3 text-[18px] font-semibold">Category</p>
         <div class="py-2 pl-3 flex overflow-y-scroll scrollbar-none">
-            <CardCategories :conditionCategories="true" />
+            <CardCategories :conditionCategories="true" @done-loading=""/>
+
+            <div v-if="!loading" class="min-w-full flex justify-center mt-3">
+                <img src="../../assets/GIF/loading.gif" class="h-[50px] aspect-square" />
+            </div>
         </div>
     </div>
     <!--____What's New____-->    
@@ -61,7 +69,7 @@
 
     <!--____Most Popular____-->
     <div class="px-3">
-        <p class="text-[18px] font-semibold">Most Popular</p>
+        <p class="text-[18px] font-semibold mb-2">Most Popular</p>
         <div class="grid grid-cols-2 gap-3">
             <div v-for="(data, index) in mP" class="overflow-hidden">
                 <div class="bg-[#E9ECEF] rounded-[17px] p-3">
@@ -88,14 +96,16 @@
 
 <script>
   import { Logo, Search, Img1, Img2, Arrow, SampleImg, Mp1, Mp2, Mp3, Mp4, Star, Wifi } from '../../utilities/png.js';
-  import CardOrderNow from '../../components/CardOrderNow';
-  import CardCategories from '../../components/CardCategories'
+  import CardOrderNow from '../../components/Card/CardOrderNow.vue';
+  import CardCategories from '../../components/Card/CardCategories.vue'
+  import Input from '../../components/Input'
 
   export default {
     props: ['showNav', 'pageSelectedF', 'categoriesList', 'wifiConnectivity'],
     components: {
       CardOrderNow,
-      CardCategories
+      CardCategories,
+      Input
     },
     mounted(){
       this.eventBusMit.on('show-nav', (val) => {
@@ -128,8 +138,14 @@
             category: 'Chicken',
             price: '175'
         } ],
-        showNav: false
+        showNav: false,
+        loading: false
       }
+    },
+    methods: {
+        doneLoading(val) {
+            this.loading = true;
+        }
     }
   }
 </script>

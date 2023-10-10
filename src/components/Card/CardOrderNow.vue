@@ -22,7 +22,7 @@
       orderNow() {
         window.scrollTo({ top: 0, behavior: 'smooth' })
         setTimeout(() => {
-          this.$router.push('/productPage')
+          this.$router.push('/product-page')
         }, (500));
       }
     }
